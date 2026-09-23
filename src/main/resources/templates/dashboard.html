@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI MeshPay Enterprise — Offline Mesh Payment Protocol</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           Theme Variables: Dark (Default) & Light Mode
+           ========================================================================== */
+        :root, [data-theme="dark"] {
+            --body-bg: radial-gradient(circle at 50% 0%, #172554 0%, #080c14 45%, #05070c 100%);
+            --ambient-glow: radial-gradient(ellipse, rgba(59, 130, 246, 0.18) 0%, rgba(99, 102, 241, 0.08) 50%, transparent 70%);
+            
+            --bg-base: #080c14;
+            --bg-surface: #0e1526;
+            --bg-header: rgba(8, 12, 20, 0.85);
+            --bg-card: rgba(16, 24, 43, 0.75);
+            --bg-card-hover: rgba(22, 33, 58, 0.85);
+            --bg-input: #0a0f1d;
+            --bg-hero: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+            --hero-border: rgba(255, 255, 255, 0.08);
+            
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-card: rgba(99, 132, 255, 0.15);
+            --border-focus: #3b82f6;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --accent-primary: #3b82f6;
+            --accent-primary-hover: #2563eb;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+            
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.25);
+            --warning: #f59e0b;
+            --warning-glow: rgba(245, 158, 11, 0.2);
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.2);
+            --purple: #a855f7;
+            --cyan: #06b6d4;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+            --shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --shadow-glow: 0 0 24px rgba(59, 130, 246, 0.2);
+
+            --step-bg: rgba(10, 15, 29, 0.7);
+            --step-featured-bg: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%);
+            --device-bg: rgba(10, 15, 29, 0.8);
+            --device-hover: rgba(15, 23, 42, 0.9);
+            --device-bridge-bg: linear-gradient(90deg, rgba(6, 78, 59, 0.25) 0%, rgba(10, 15, 29, 0.85) 100%);
+            --table-wrap-bg: rgba(10, 15, 29, 0.5);
+            --th-bg: rgba(14, 21, 38, 0.8);
+            --tr-hover: rgba(255, 255, 255, 0.02);
+            --chip-bg: rgba(255, 255, 255, 0.05);
+            --canvas-bg: #060a12;
+            --modal-bg: #0f172a;
+            --modal-inner-bg: #090e1a;
+            --toast-bg: #0f172a;
+            --terminal-bg: #050811;
+            --terminal-header-bg: #090e1d;
+        }
+
+        [data-theme="light"] {
+            --body-bg: radial-gradient(circle at 50% 0%, #e0e7ff 0%, #f1f5f9 35%, #f8fafc 100%);
+            --ambient-glow: radial-gradient(ellipse, rgba(59, 130, 246, 0.12) 0%, rgba(99, 102, 241, 0.05) 50%, transparent 70%);
+            
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-header: rgba(255, 255, 255, 0.85);
+            --bg-card: rgba(255, 255, 255, 0.88);
+            --bg-card-hover: #ffffff;
+            --bg-input: #ffffff;
+            --bg-hero: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+            --hero-border: rgba(99, 102, 241, 0.2);
+            
+            --border-subtle: rgba(0, 0, 0, 0.08);
+            --border-card: rgba(99, 132, 255, 0.22);
+            --border-focus: #2563eb;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            
+            --accent-primary: #2563eb;
+            --accent-primary-hover: #1d4ed8;
+            --accent-gradient: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+            
+            --success: #059669;
+            --success-glow: rgba(5, 150, 105, 0.2);
+            --warning: #d97706;
+            --warning-glow: rgba(217, 119, 6, 0.18);
+            --danger: #dc2626;
+            --danger-glow: rgba(220, 38, 38, 0.18);
+            --purple: #7c3aed;
+            --cyan: #0284c7;
+            
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.06), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+            --shadow-glow: 0 0 24px rgba(37, 99, 235, 0.12);
+
+            --step-bg: #f8fafc;
+            --step-featured-bg: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+            --device-bg: #ffffff;
+            --device-hover: #f1f5f9;
+            --device-bridge-bg: linear-gradient(90deg, rgba(209, 250, 229, 0.55) 0%, #ffffff 100%);
+            --table-wrap-bg: #ffffff;
+            --th-bg: #f1f5f9;
+            --tr-hover: #f8fafc;
+            --chip-bg: #f1f5f9;
+            --canvas-bg: #f8fafc;
+            --modal-bg: #ffffff;
+            --modal-inner-bg: #f8fafc;
+            --toast-bg: #ffffff;
+            --terminal-bg: #0b1120;
+            --terminal-header-bg: #1e293b;
+        }
+
+        /* Base Resets */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--body-bg);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 60px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient background glow */
+        .ambient-glow {
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+            height: 450px;
+            background: var(--ambient-glow);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Top Navigation Header */
+        header.saas-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--bg-header);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 24px;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
+            color: white;
+            font-size: 20px;
+        }
+
+        .brand-title-wrap h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .badge-pro {
+            background: rgba(99, 102, 241, 0.18);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            color: var(--accent-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pulse-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse-green 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--chip-bg);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .btn-ghost-sm {
+            background: var(--chip-bg);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        .btn-ghost-sm:hover {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            background: var(--chip-bg);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .theme-icon {
+            font-size: 14px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle-btn:hover .theme-icon {
+            transform: rotate(20deg) scale(1.1);
+        }
+
+        /* Main Container */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Banner & Protocol Concept Card */
+        .hero-banner {
+            background: var(--bg-hero);
+            border: 1px solid var(--hero-border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 320px;
+            background: radial-gradient(circle at right, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .hero-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            max-width: 780px;
+        }
+
+        .security-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .sec-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            background: var(--chip-bg);
+            padding: 4px 9px;
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle);
+            color: var(--accent-primary);
+            font-weight: 500;
+        }
+
+        /* KPI Metric Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-card);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+        }
+
+        .kpi-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .kpi-icon-wrap {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .kpi-value {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+        }
+
+        .kpi-meta {
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+        }
+
+        /* 4-Step Interactive Demo Action Strip */
+        .action-strip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(14px);
+        }
+
+        .action-strip-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .action-strip-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stepper-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.2fr 0.8fr;
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        @media (max-width: 1100px) {
+            .stepper-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .step-block {
+            background: var(--step-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+            position: relative;
+        }
+
+        .step-block.featured {
+            border-color: rgba(59, 130, 246, 0.4);
+            background: var(--step-featured-bg);
+        }
+
+        .step-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-pill {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .step-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Form Inputs */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .input-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .saas-select, .saas-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 8px 10px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .saas-select:focus, .saas-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .quick-amounts {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .amt-chip {
+            background: var(--chip-bg);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .amt-chip:hover {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        /* Buttons */
+        .saas-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .saas-btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        .saas-btn-primary:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45);
+        }
+
+        .saas-btn-secondary {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: var(--accent-primary);
+        }
+
+        .saas-btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.22);
+            border-color: var(--accent-primary);
+        }
+
+        .saas-btn-purple {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: var(--purple);
+        }
+
+        .saas-btn-purple:hover {
+            background: rgba(139, 92, 246, 0.25);
+        }
+
+        .saas-btn-danger {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+        }
+
+        .saas-btn-danger:hover {
+            background: rgba(239, 68, 68, 0.22);
+        }
+
+        .saas-btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .saas-btn-outline:hover {
+            background: var(--chip-bg);
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+        }
+
+        /* 2-Column Main Workspace */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 992px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card Frame */
+        .saas-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .card-heading {
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+
+        .card-badge {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--chip-bg);
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Devices List & Topology */
+        .devices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .device-row {
+            background: var(--device-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .device-row:hover {
+            border-color: var(--accent-primary);
+            background: var(--device-hover);
+        }
+
+        .device-row.is-bridge {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: var(--device-bridge-bg);
+        }
+
+        .device-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .device-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-sm);
+            background: var(--chip-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .is-bridge .device-avatar {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .device-id {
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-primary);
+        }
+
+        .badge-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            letter-spacing: 0.03em;
+        }
+
+        .badge-status-bridge {
+            background: rgba(16, 185, 129, 0.18);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .badge-status-offline {
+            background: var(--chip-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .device-packets-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .packet-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: var(--accent-primary);
+            padding: 2px 7px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        /* Topology Visualizer Canvas */
+        .topology-canvas-wrap {
+            position: relative;
+            background: var(--canvas-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            height: 180px;
+            margin-top: 14px;
+            overflow: hidden;
+        }
+
+        #meshCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .canvas-overlay-tag {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: var(--chip-bg);
+            border: 1px solid var(--border-subtle);
+            padding: 2px 6px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        /* Accounts Table */
+        .accounts-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .accounts-table th {
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .accounts-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 13px;
+        }
+
+        .account-vpa-cell {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-primary);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .user-avatar-sm {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--chip-bg);
+            border: 1px solid var(--border-subtle);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .balance-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.12);
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            display: inline-block;
+        }
+
+        /* Transaction Ledger Section */
+        .ledger-section {
+            margin-bottom: 24px;
+        }
+
+        .table-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 280px;
+            width: 100%;
+        }
+
+        .search-box input {
+            padding-left: 32px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .saas-table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            background: var(--table-wrap-bg);
+        }
+
+        .saas-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .saas-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            background: var(--th-bg);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .saas-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+        }
+
+        .saas-table tr:hover td {
+            background: var(--tr-hover);
+        }
+
+        .tx-id-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            background: var(--chip-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 9999px;
+            letter-spacing: 0.02em;
+        }
+
+        .status-SETTLED {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .status-DUPLICATE_DROPPED {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+        }
+
+        .status-REJECTED, .status-INVALID {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+        }
+
+        /* Activity Console / Terminal (Always Sleek Dark-Console for high code contrast) */
+        .terminal-card {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .terminal-header {
+            background: var(--terminal-header-bg);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .terminal-body {
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 12px;
+            padding: 14px 16px;
+            height: 220px;
+            overflow-y: auto;
+            color: #cbd5e1;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 4px;
+        }
+
+        .log-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.6;
+        }
+
+        .log-ts {
+            color: #64748b;
+            font-size: 11px;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .log-msg {
+            word-break: break-all;
+        }
+
+        .log-accent { color: #60a5fa; font-weight: 500; }
+        .log-success { color: #4ade80; font-weight: 500; }
+        .log-warn { color: #fbbf24; font-weight: 500; }
+        .log-danger { color: #f87171; font-weight: 500; }
+
+        /* Modal Backdrop */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: var(--modal-bg);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 600px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            color: var(--text-primary);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 999;
+        }
+
+        .saas-toast {
+            background: var(--toast-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            color: var(--text-primary);
+            font-size: 13px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slide-in 0.25s ease-out;
+            max-width: 360px;
+        }
+
+        @keyframes slide-in {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ambient-glow"></div>
+
+<!-- Top SaaS Bar -->
+<header class="saas-header">
+    <div class="header-inner">
+        <div class="brand-cluster">
+            <div class="brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                    <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                    <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                </svg>
+            </div>
+            <div class="brand-title-wrap">
+                <h1>
+                    MeshPay Protocol 
+                    <span class="badge-pill badge-pro">Zero-Net UPI</span>
+                </h1>
+                <div class="brand-subtitle">Decentralized Bluetooth Mesh Payment Relaying & Idempotent Settlement</div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <!-- Theme Toggle Button -->
+            <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeToggleBtn" title="Switch Theme (Light / Dark)">
+                <span class="theme-icon" id="themeIcon">☀️</span>
+                <span id="themeLabel">Light</span>
+            </button>
+
+            <div class="system-status">
+                <div class="pulse-indicator"></div>
+                <span>Server Enclave: <strong>Active</strong></span>
+            </div>
+
+            <button class="btn-ghost-sm" onclick="showKeyModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                RSA Key Enclave
+            </button>
+
+            <a href="/h2-console" target="_blank" class="btn-ghost-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+                H2 DB Console
+            </a>
+
+            <button class="btn-ghost-sm" onclick="refresh(true)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="syncIcon">
+                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                </svg>
+                Sync
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="app-container">
+
+    <!-- Hero Context Banner -->
+    <div class="hero-banner">
+        <div class="hero-content">
+            <h2>Offline UPI Payment Mesh Simulator</h2>
+            <p>
+                Enables instant peer-to-peer UPI payments in cellular dead-zones (basements, underground transit, remote regions).
+                Transactions are end-to-end encrypted on the sender's device, hopped across peer Bluetooth mesh nodes, and settled atomically once any bridge node touches 4G/WiFi.
+            </p>
+            <div class="security-tags">
+                <span class="sec-tag">🔐 RSA-2048 OAEP + AES-256-GCM Hybrid</span>
+                <span class="sec-tag">⚡ Atomic SHA-256 Idempotency Cache</span>
+                <span class="sec-tag">⏳ 24h Replay Attack Window</span>
+                <span class="sec-tag">📡 Hop-Decremented BLE Gossip (TTL 5)</span>
+            </div>
+        </div>
+        <div style="flex-shrink: 0; text-align: right;">
+            <button class="saas-btn saas-btn-purple" onclick="runAutomatedDemo()" id="autoDemoBtn" style="width: auto; padding: 10px 20px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Simulate Full Lifecycle
+            </button>
+        </div>
+    </div>
+
+    <!-- SaaS KPI Metrics Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span>Total Settled Volume</span>
+                <div class="kpi-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">₹</div>
+            </div>
+            <div class="kpi-value" id="kpiSettledVolume">₹0.00</div>
+            <div class="kpi-meta" id="kpiSettledCount">0 successful transfers</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span>In-Flight Mesh Packets</span>
+                <div class="kpi-icon-wrap" style="background: rgba(59, 130, 246, 0.15); color: var(--accent-primary);">📦</div>
+            </div>
+            <div class="kpi-value" id="kpiActivePackets">0</div>
+            <div class="kpi-meta">Gossip propagation pool</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span>Active Mesh Nodes</span>
+                <div class="kpi-icon-wrap" style="background: rgba(139, 92, 246, 0.15); color: var(--purple);">📱</div>
+            </div>
+            <div class="kpi-value" id="kpiDeviceCount">5 Nodes</div>
+            <div class="kpi-meta">4 Offline &bull; 1 4G Bridge</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span>Idempotency Cache</span>
+                <div class="kpi-icon-wrap" style="background: rgba(245, 158, 11, 0.15); color: var(--warning);">🛡️</div>
+            </div>
+            <div class="kpi-value" id="kpiIdempotencyCount">0</div>
+            <div class="kpi-meta">Atomic duplicate shields</div>
+        </div>
+    </div>
+
+    <!-- 4-Step Interactive Orchestration Console -->
+    <div class="action-strip">
+        <div class="action-strip-header">
+            <div class="action-strip-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+                Protocol Simulation Control Center
+            </div>
+            <button class="saas-btn-danger" style="width: auto; padding: 6px 14px; font-size: 12px; border-radius: var(--radius-sm);" onclick="resetMesh()">
+                🗑 Reset Mesh & Cache
+            </button>
+        </div>
+
+        <div class="stepper-grid">
+            <!-- Step 1: Inject Payment -->
+            <div class="step-block featured">
+                <div>
+                    <div class="step-title-wrap">
+                        <span class="step-pill">1</span>
+                        <div>
+                            <div class="step-name">Compose & Inject</div>
+                            <div class="step-desc">Offline client encrypts with Server RSA key</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+                        <div class="form-row">
+                            <div class="input-group">
+                                <span class="input-label">Sender (Offline)</span>
+                                <select id="senderVpa" class="saas-select">
+                                    <option value="alice@demo">alice@demo (Alice)</option>
+                                    <option value="bob@demo">bob@demo (Bob)</option>
+                                    <option value="carol@demo">carol@demo (Carol)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-label">Receiver</span>
+                                <select id="receiverVpa" class="saas-select">
+                                    <option value="bob@demo">bob@demo (Bob)</option>
+                                    <option value="carol@demo">carol@demo (Carol)</option>
+                                    <option value="alice@demo">alice@demo (Alice)</option>
+                                    <option value="dave@demo">dave@demo (Dave)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="input-group">
+                                <span class="input-label">Amount (₹)</span>
+                                <input type="number" id="amount" value="500" class="saas-input" min="1" step="10">
+                                <div class="quick-amounts">
+                                    <span class="amt-chip" onclick="setAmount(100)">₹100</span>
+                                    <span class="amt-chip" onclick="setAmount(500)">₹500</span>
+                                    <span class="amt-chip" onclick="setAmount(1000)">₹1k</span>
+                                    <span class="amt-chip" onclick="setAmount(2500)">₹2.5k</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-label">UPI PIN</span>
+                                <input type="password" id="pin" value="1234" maxlength="6" class="saas-input" style="letter-spacing: 2px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="saas-btn saas-btn-primary" onclick="sendPacket()" id="injectBtn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    Inject into Mesh (phone-alice)
+                </button>
+            </div>
+
+            <!-- Step 2: Mesh Gossip -->
+            <div class="step-block">
+                <div>
+                    <div class="step-title-wrap">
+                        <span class="step-pill" style="background: var(--cyan);">2</span>
+                        <div>
+                            <div class="step-name">Gossip Hop</div>
+                            <div class="step-desc">Relay via Bluetooth BLE hops</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-top: 10px; line-height: 1.5;">
+                        Simulates peer discovery in the basement. Every device relays held packets to neighbors; TTL decrements by 1 each hop.
+                    </p>
+                </div>
+                <button class="saas-btn saas-btn-secondary" onclick="gossip()" id="gossipBtn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    Run Gossip Round
+                </button>
+            </div>
+
+            <!-- Step 3: Bridge Uplink -->
+            <div class="step-block">
+                <div>
+                    <div class="step-title-wrap">
+                        <span class="step-pill" style="background: var(--success);">3</span>
+                        <div>
+                            <div class="step-name">Bridge 4G Ingest</div>
+                            <div class="step-desc">Node reaches outdoor cellular connection</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-top: 10px; line-height: 1.5;">
+                        Bridge nodes POST held packets in parallel to <code>/api/bridge/ingest</code>. Exercises concurrent atomic SHA-256 deduplication.
+                    </p>
+                </div>
+                <button class="saas-btn saas-btn-primary" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);" onclick="flushBridges()" id="bridgeBtn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    Bridges Upload to 4G
+                </button>
+            </div>
+
+            <!-- Step 4: Idempotency Prover -->
+            <div class="step-block">
+                <div>
+                    <div class="step-title-wrap">
+                        <span class="step-pill" style="background: var(--warning);">4</span>
+                        <div>
+                            <div class="step-name">Replay Defense</div>
+                            <div class="step-desc">Test duplicate storms</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-top: 10px; line-height: 1.5;">
+                        Re-flush bridges with existing packets to prove duplicate rejection without double-spending.
+                    </p>
+                </div>
+                <button class="saas-btn saas-btn-outline" onclick="flushBridges()">
+                    ⚡ Re-Attempt Upload
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2-Column Mesh Devices & Accounts Section -->
+    <div class="workspace-grid">
+        <!-- Column 1: Live Mesh Topology & Device States -->
+        <div class="saas-card">
+            <div class="card-title-bar">
+                <div class="card-heading">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                    Mesh Network Topology
+                </div>
+                <div class="card-badge" id="deviceSummaryBadge">5 Devices Active</div>
+            </div>
+
+            <div class="devices-container" id="devicesList">
+                <!-- Injected via JavaScript -->
+            </div>
+
+            <!-- Visual Mesh Topology Canvas -->
+            <div class="topology-canvas-wrap">
+                <span class="canvas-overlay-tag">LIVE MESH SIMULATION MAP</span>
+                <canvas id="meshCanvas" width="600" height="180"></canvas>
+            </div>
+        </div>
+
+        <!-- Column 2: Account Balances & Ledger Snapshot -->
+        <div class="saas-card">
+            <div class="card-title-bar">
+                <div class="card-heading">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                    Core Banking Settlement Ledger
+                </div>
+                <div class="card-badge">H2 In-Memory DB</div>
+            </div>
+
+            <table class="accounts-table" id="accountsTable">
+                <thead>
+                    <tr>
+                        <th>Participant</th>
+                        <th>VPA Handle</th>
+                        <th>Available Balance</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Injected via JavaScript -->
+                </tbody>
+            </table>
+
+            <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; color: var(--text-muted);">Transactions are cryptographically signed & debited atomically.</span>
+                <span style="font-size: 11px; color: var(--accent-primary); font-family: 'JetBrains Mono', monospace;" id="idempotencyStatus"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full-Width Transaction History Ledger -->
+    <div class="saas-card ledger-section">
+        <div class="card-title-bar">
+            <div class="card-heading">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Audit Settlement Ledger
+            </div>
+            <div class="table-toolbar">
+                <div class="search-box">
+                    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="txSearchInput" placeholder="Filter by VPA or status..." class="saas-input" onkeyup="filterTransactions()">
+                </div>
+            </div>
+        </div>
+
+        <div class="saas-table-wrap">
+            <table class="saas-table" id="txTable">
+                <thead>
+                    <tr>
+                        <th>Tx ID</th>
+                        <th>Sender VPA</th>
+                        <th>Receiver VPA</th>
+                        <th>Amount</th>
+                        <th>Settlement Status</th>
+                        <th>Relayed Via Bridge</th>
+                        <th>BLE Hops</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="txTableBody">
+                    <!-- Injected via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Real-time Activity Terminal -->
+    <div class="terminal-card">
+        <div class="terminal-header">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="terminal-dots">
+                    <div class="terminal-dot" style="background: #ef4444;"></div>
+                    <div class="terminal-dot" style="background: #f59e0b;"></div>
+                    <div class="terminal-dot" style="background: #10b981;"></div>
+                </div>
+                <span style="font-size: 12px; font-weight: 600; color: #94a3b8; font-family: 'JetBrains Mono', monospace;">protocol_runtime.log</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn-ghost-sm" style="padding: 3px 8px; font-size: 11px;" onclick="clearLogs()">Clear</button>
+            </div>
+        </div>
+        <div class="terminal-body" id="logTerminal">
+            <!-- Log entries stream here -->
+        </div>
+    </div>
+
+</main>
+
+<!-- RSA Public Key Enclave Modal -->
+<div class="modal-overlay" id="keyModal">
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 16px; font-weight: 700;">Server Enclave Public Key</h3>
+            <button class="btn-ghost-sm" onclick="hideKeyModal()" style="border: none; font-size: 16px;">✕</button>
+        </div>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
+            Every offline mobile client caches this RSA-2048 public key when online. In the basement, the phone uses it with <strong>OAEP-SHA256</strong> to seal an ephemeral <strong>AES-256-GCM</strong> session key. Intermediate mesh phones cannot decrypt the payment payload.
+        </p>
+        <div style="background: var(--modal-inner-bg); border: 1px solid var(--border-subtle); padding: 12px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; font-size: 11px; word-break: break-all; color: var(--accent-primary); max-height: 180px; overflow-y: auto;" id="modalPublicKey">
+            Loading public key...
+        </div>
+        <div style="display: flex; justify-content: flex-end; margin-top: 16px; gap: 8px;">
+            <button class="saas-btn saas-btn-secondary" style="width: auto;" onclick="copyPublicKey()">Copy Public Key</button>
+            <button class="saas-btn saas-btn-primary" style="width: auto;" onclick="hideKeyModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+    // State Store
+    let allTransactions = [];
+    let canvasAnimationId = null;
+    let nodeCoordinates = {
+        'phone-alice': { x: 80, y: 55, name: 'Alice (Sender)', color: '#38bdf8' },
+        'phone-stranger1': { x: 190, y: 120, name: 'Peer 1', color: '#94a3b8' },
+        'phone-stranger2': { x: 300, y: 45, name: 'Peer 2', color: '#94a3b8' },
+        'phone-stranger3': { x: 410, y: 125, name: 'Peer 3', color: '#94a3b8' },
+        'phone-bridge': { x: 520, y: 65, name: 'Bridge (4G)', color: '#34d399' }
+    };
+    let activePacketsList = [];
+    let isAutoSimulating = false;
+
+    // Theme Management: Light & Dark Mode
+    function initTheme() {
+        const savedTheme = localStorage.getItem('meshpay_theme');
+        const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialTheme = savedTheme ? savedTheme : (systemPrefersDark ? 'dark' : 'light');
+        applyTheme(initialTheme);
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('meshpay_theme', theme);
+        
+        const icon = document.getElementById('themeIcon');
+        const label = document.getElementById('themeLabel');
+        if (icon && label) {
+            if (theme === 'light') {
+                icon.textContent = '🌙';
+                label.textContent = 'Dark';
+            } else {
+                icon.textContent = '☀️';
+                label.textContent = 'Light';
+            }
+        }
+        drawMeshCanvas();
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme);
+        showToast('Theme Changed', `Switched to ${nextTheme.toUpperCase()} mode`, 'info');
+    }
+
+    // Toast Notification helper
+    function showToast(title, message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'saas-toast';
+        
+        const colors = {
+            success: 'var(--success)',
+            warning: 'var(--warning)',
+            danger: 'var(--danger)',
+            info: 'var(--accent-primary)'
+        };
+        
+        toast.innerHTML = `
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: ${colors[type] || colors.info};"></div>
+            <div>
+                <strong style="display: block; font-size: 12px; color: ${colors[type] || colors.info}">${title}</strong>
+                <span style="font-size: 12px; color: var(--text-secondary)">${message}</span>
+            </div>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(10px)';
+            toast.style.transition = 'all 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3600);
+    }
+
+    // Terminal Logger
+    function logEvent(msg, type = 'default') {
+        const terminal = document.getElementById('logTerminal');
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        
+        const ts = new Date().toLocaleTimeString();
+        let colorClass = 'log-msg';
+        if (type === 'success') colorClass = 'log-success';
+        if (type === 'warn') colorClass = 'log-warn';
+        if (type === 'danger') colorClass = 'log-danger';
+        if (type === 'accent') colorClass = 'log-accent';
+
+        entry.innerHTML = `
+            <span class="log-ts">[${ts}]</span>
+            <span class="${colorClass}">${msg}</span>
+        `;
+        terminal.prepend(entry);
+    }
+
+    function clearLogs() {
+        document.getElementById('logTerminal').innerHTML = '';
+        logEvent('Log terminal cleared.', 'accent');
+    }
+
+    function setAmount(val) {
+        document.getElementById('amount').value = val;
+    }
+
+    function prefillTransfer(vpa) {
+        document.getElementById('senderVpa').value = vpa;
+        showToast('Sender Selected', `Active sender switched to ${vpa}`, 'info');
+    }
+
+    // Modal Helpers
+    async function showKeyModal() {
+        document.getElementById('keyModal').style.display = 'flex';
+        try {
+            const data = await fetch('/api/server-key').then(r => r.json());
+            document.getElementById('modalPublicKey').innerText = data.publicKey;
+        } catch(e) {
+            document.getElementById('modalPublicKey').innerText = 'Failed to load public key.';
+        }
+    }
+
+    function hideKeyModal() {
+        document.getElementById('keyModal').style.display = 'none';
+    }
+
+    function copyPublicKey() {
+        const key = document.getElementById('modalPublicKey').innerText;
+        navigator.clipboard.writeText(key).then(() => {
+            showToast('Key Copied', 'RSA-2048 public key copied to clipboard', 'success');
+        });
+    }
+
+    // Main Refresh State
+    async function refresh(isManual = false) {
+        const syncIcon = document.getElementById('syncIcon');
+        if (isManual && syncIcon) syncIcon.style.transform = 'rotate(180deg)';
+
+        try {
+            // 1. Fetch Mesh State
+            const m = await fetch('/api/mesh/state').then(r => r.json());
+            
+            let totalPackets = 0;
+            const devicesDiv = document.getElementById('devicesList');
+            devicesDiv.innerHTML = m.devices.map(d => {
+                totalPackets += d.packetCount;
+                const isBridge = d.hasInternet;
+                return `
+                    <div class="device-row ${isBridge ? 'is-bridge' : ''}">
+                        <div class="device-info-left">
+                            <div class="device-avatar">
+                                ${isBridge ? '🌐' : '📱'}
+                            </div>
+                            <div>
+                                <div class="device-id">
+                                    ${d.deviceId}
+                                    <span class="badge-status ${isBridge ? 'badge-status-bridge' : 'badge-status-offline'}">
+                                        ${isBridge ? '4G GATEWAY' : 'OFFLINE BLE'}
+                                    </span>
+                                </div>
+                                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                                    Holding <strong>${d.packetCount}</strong> encrypted packet(s)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="device-packets-chips">
+                            ${d.packetIds.length === 0 
+                                ? '<span style="font-size: 11px; color: var(--text-muted); font-style: italic;">No packets held</span>' 
+                                : d.packetIds.map(id => `<span class="packet-chip">#${id}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update KPIs
+            document.getElementById('kpiActivePackets').innerText = totalPackets;
+            document.getElementById('kpiDeviceCount').innerText = `${m.devices.length} Nodes`;
+            document.getElementById('kpiIdempotencyCount').innerText = m.idempotencyCacheSize;
+            document.getElementById('idempotencyStatus').innerText = `Cache Size: ${m.idempotencyCacheSize} hashes`;
+            activePacketsList = m.devices;
+
+            // 2. Fetch Accounts
+            const accs = await fetch('/api/accounts').then(r => r.json());
+            const accsBody = document.querySelector('#accountsTable tbody');
+            let userInitials = {
+                'alice@demo': 'AL',
+                'bob@demo': 'BO',
+                'carol@demo': 'CA',
+                'dave@demo': 'DA'
+            };
+            
+            accsBody.innerHTML = accs.map(a => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="user-avatar-sm">${userInitials[a.vpa] || 'U'}</div>
+                            <strong style="color: var(--text-primary);">${a.holderName}</strong>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="account-vpa-cell">${a.vpa}</span>
+                    </td>
+                    <td>
+                        <span class="balance-badge">₹${parseFloat(a.balance).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    </td>
+                    <td style="text-align: right;">
+                        <button class="btn-ghost-sm" style="display: inline-flex; padding: 3px 8px; font-size: 11px;" onclick="prefillTransfer('${a.vpa}')">
+                            Send from here
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // 3. Fetch Transactions
+            const txs = await fetch('/api/transactions').then(r => r.json());
+            allTransactions = txs;
+            renderTransactions(txs);
+
+            // Compute settled metrics
+            const settledList = txs.filter(t => t.status === 'SETTLED');
+            const totalSettledVal = settledList.reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+            document.getElementById('kpiSettledVolume').innerText = `₹${totalSettledVal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('kpiSettledCount').innerText = `${settledList.length} settled &bull; ${txs.length - settledList.length} dropped duplicates`;
+
+            drawMeshCanvas();
+
+        } catch (e) {
+            console.error('Refresh error:', e);
+        } finally {
+            if (syncIcon) {
+                setTimeout(() => syncIcon.style.transform = 'none', 300);
+            }
+        }
+    }
+
+    function renderTransactions(txs) {
+        const tbody = document.getElementById('txTableBody');
+        if (!txs || txs.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 32px;">
+                        No mesh transactions executed yet. Inject a payment above to begin!
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = txs.map(t => {
+            const dateStr = t.settledAt ? new Date(t.settledAt).toLocaleTimeString() : 'Pending';
+            let statusIcon = '●';
+            if (t.status === 'SETTLED') statusIcon = '✓';
+            if (t.status === 'DUPLICATE_DROPPED') statusIcon = '✕';
+
+            return `
+                <tr>
+                    <td><span class="tx-id-badge">#TX-${t.id}</span></td>
+                    <td><strong style="color: var(--accent-primary); font-family: 'JetBrains Mono', monospace;">${t.senderVpa}</strong></td>
+                    <td><strong style="color: var(--text-primary); font-family: 'JetBrains Mono', monospace;">${t.receiverVpa}</strong></td>
+                    <td><strong style="color: var(--success); font-family: 'JetBrains Mono', monospace;">₹${parseFloat(t.amount).toFixed(2)}</strong></td>
+                    <td>
+                        <span class="status-chip status-${t.status}">
+                            <span>${statusIcon}</span>
+                            ${t.status}
+                        </span>
+                    </td>
+                    <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--purple); font-weight: 500;">${t.bridgeNodeId}</span></td>
+                    <td><span style="background: var(--chip-bg); padding: 2px 7px; border-radius: 4px; font-size: 11px; border: 1px solid var(--border-subtle);">${t.hopCount} hops</span></td>
+                    <td style="font-size: 11px; color: var(--text-muted);">${dateStr}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function filterTransactions() {
+        const q = document.getElementById('txSearchInput').value.toLowerCase().trim();
+        if (!q) {
+            renderTransactions(allTransactions);
+            return;
+        }
+        const filtered = allTransactions.filter(t => 
+            t.senderVpa.toLowerCase().includes(q) ||
+            t.receiverVpa.toLowerCase().includes(q) ||
+            t.status.toLowerCase().includes(q) ||
+            t.bridgeNodeId.toLowerCase().includes(q)
+        );
+        renderTransactions(filtered);
+    }
+
+    // Step 1: Inject Payment
+    async function sendPacket() {
+        const btn = document.getElementById('injectBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Encrypting & Injecting...';
+        btn.disabled = true;
+
+        const body = {
+            senderVpa: document.getElementById('senderVpa').value,
+            receiverVpa: document.getElementById('receiverVpa').value,
+            amount: parseFloat(document.getElementById('amount').value),
+            pin: document.getElementById('pin').value,
+            ttl: 5,
+            startDevice: 'phone-alice'
+        };
+
+        try {
+            const r = await fetch('/api/demo/send', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            }).then(res => res.json());
+
+            logEvent(`📤 [INJECT] Sealed ₹${body.amount} payment from ${body.senderVpa} → ${body.receiverVpa}`, 'accent');
+            logEvent(`   Packet #${r.packetId.substring(0,8)} injected at ${r.injectedAt} (TTL=${r.ttl})`, 'default');
+            logEvent(`   Ciphertext: ${r.ciphertextPreview}`, 'default');
+            
+            showToast('Packet Injected', `₹${body.amount} sealed & handed to phone-alice`, 'success');
+            await refresh();
+        } catch (e) {
+            logEvent(`❌ Injection failed: ${e.message}`, 'danger');
+            showToast('Injection Error', e.message, 'danger');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    // Step 2: Gossip
+    async function gossip() {
+        const btn = document.getElementById('gossipBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Gossiping...';
+        btn.disabled = true;
+
+        try {
+            const r = await fetch('/api/mesh/gossip', {method: 'POST'}).then(res => res.json());
+            logEvent(`🔄 [GOSSIP ROUND] Executed ${r.transfers} BLE peer packet transfers across mesh`, 'accent');
+            logEvent(`   Node state: ${JSON.stringify(r.deviceCounts)}`, 'default');
+            
+            showToast('Mesh Gossip Complete', `${r.transfers} packet hops executed across neighbors`, 'info');
+            await refresh();
+        } catch (e) {
+            logEvent(`❌ Gossip failed: ${e.message}`, 'danger');
+            showToast('Gossip Error', e.message, 'danger');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    // Step 3: Flush Bridges
+    async function flushBridges() {
+        const btn = document.getElementById('bridgeBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Uploading to 4G...';
+        btn.disabled = true;
+
+        try {
+            const r = await fetch('/api/mesh/flush', {method: 'POST'}).then(res => res.json());
+            logEvent(`📡 [4G UPLINK] Bridge node executed ${r.uploadsAttempted} upload(s) to /api/bridge/ingest`, 'accent');
+            
+            if (r.results && r.results.length > 0) {
+                r.results.forEach(res => {
+                    const isSettled = res.outcome === 'SETTLED';
+                    const isDup = res.outcome === 'DUPLICATE_DROPPED';
+                    const type = isSettled ? 'success' : (isDup ? 'warn' : 'danger');
+                    logEvent(`   ➜ Node [${res.bridgeNode}] Packet #${res.packetId} => ${res.outcome} ${res.reason ? '('+res.reason+')' : ''}`, type);
+                    
+                    if (isSettled) {
+                        showToast('Payment Settled!', `Packet #${res.packetId} decrypted & settled on core ledger`, 'success');
+                    } else if (isDup) {
+                        showToast('Duplicate Blocked', `Packet #${res.packetId} filtered by idempotency cache`, 'warning');
+                    }
+                });
+            } else {
+                logEvent('   No bridge nodes currently hold packets. Run Gossip first!', 'warn');
+                showToast('Bridge Uplink', 'No packets held by 4G bridge node', 'info');
+            }
+            await refresh();
+        } catch (e) {
+            logEvent(`❌ Bridge upload failed: ${e.message}`, 'danger');
+            showToast('Bridge Error', e.message, 'danger');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    // Reset Mesh
+    async function resetMesh() {
+        if (!confirm('Are you sure you want to clear all mesh packets and the idempotency cache?')) return;
+        try {
+            await fetch('/api/mesh/reset', {method: 'POST'});
+            logEvent('🗑 [RESET] Mesh packets dropped and atomic idempotency cache cleared.', 'warn');
+            showToast('System Reset', 'Mesh and idempotency cache cleared', 'info');
+            await refresh();
+        } catch (e) {
+            showToast('Reset Error', e.message, 'danger');
+        }
+    }
+
+    // 1-Click Automated Lifecycle
+    async function runAutomatedDemo() {
+        if (isAutoSimulating) return;
+        isAutoSimulating = true;
+        const btn = document.getElementById('autoDemoBtn');
+        const origText = btn.innerHTML;
+        btn.innerHTML = 'Running Simulator...';
+        btn.disabled = true;
+
+        showToast('Auto-Pilot Started', 'Injecting payment in basement zone...', 'info');
+
+        try {
+            // 1. Inject
+            await sendPacket();
+            await new Promise(r => setTimeout(r, 1400));
+
+            // 2. Gossip Round 1
+            showToast('Gossip Hop 1', 'Packet hopping through basement peer devices...', 'info');
+            await gossip();
+            await new Promise(r => setTimeout(r, 1400));
+
+            // 3. Gossip Round 2 (Reaching Bridge node)
+            showToast('Gossip Hop 2', 'Packet reaches phone-bridge...', 'info');
+            await gossip();
+            await new Promise(r => setTimeout(r, 1400));
+
+            // 4. Bridge Uploads
+            showToast('4G Cellular Uplink', 'Bridge node walks outside & uploads to backend...', 'info');
+            await flushBridges();
+            await new Promise(r => setTimeout(r, 1200));
+
+            // 5. Test duplicate idempotency
+            logEvent('🧪 Proving Idempotency: Attempting second flush of duplicate packet...', 'warn');
+            await flushBridges();
+
+            showToast('Simulation Complete', 'End-to-end zero-internet UPI payment verified!', 'success');
+        } catch (e) {
+            console.error(e);
+        } finally {
+            btn.innerHTML = origText;
+            btn.disabled = false;
+            isAutoSimulating = false;
+        }
+    }
+
+    // Interactive HTML5 Mesh Topology Canvas
+    function drawMeshCanvas() {
+        const canvas = document.getElementById('meshCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw Basement Zone vs Surface Zone divider
+        ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.08)';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(465, 0);
+        ctx.lineTo(465, height);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = isLight ? '#64748b' : 'rgba(148, 163, 184, 0.5)';
+        ctx.font = '600 10px Inter';
+        ctx.fillText('BASEMENT (NO SIGNAL)', 20, 20);
+        ctx.fillStyle = isLight ? '#059669' : 'rgba(52, 211, 153, 0.7)';
+        ctx.fillText('SURFACE (4G)', 480, 20);
+
+        // Connections between mesh nodes
+        const links = [
+            ['phone-alice', 'phone-stranger1'],
+            ['phone-stranger1', 'phone-stranger2'],
+            ['phone-stranger2', 'phone-stranger3'],
+            ['phone-stranger3', 'phone-bridge'],
+            ['phone-alice', 'phone-stranger2'],
+            ['phone-stranger2', 'phone-bridge']
+        ];
+
+        ctx.strokeStyle = isLight ? 'rgba(37, 99, 235, 0.22)' : 'rgba(59, 130, 246, 0.2)';
+        ctx.lineWidth = 1.5;
+        links.forEach(([fromId, toId]) => {
+            const p1 = nodeCoordinates[fromId];
+            const p2 = nodeCoordinates[toId];
+            if (p1 && p2) {
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+        });
+
+        // Draw nodes
+        Object.entries(nodeCoordinates).forEach(([id, coords]) => {
+            const deviceState = activePacketsList.find(d => d.deviceId === id);
+            const hasPackets = deviceState && deviceState.packetCount > 0;
+            const isBridge = id === 'phone-bridge';
+
+            // Glow ring if holding packets
+            if (hasPackets) {
+                ctx.beginPath();
+                ctx.arc(coords.x, coords.y, 18, 0, Math.PI * 2);
+                ctx.fillStyle = isBridge 
+                    ? (isLight ? 'rgba(5, 150, 105, 0.2)' : 'rgba(52, 211, 153, 0.25)')
+                    : (isLight ? 'rgba(37, 99, 235, 0.2)' : 'rgba(59, 130, 246, 0.25)');
+                ctx.fill();
+            }
+
+            // Bridge cellular signal animation wave
+            if (isBridge) {
+                ctx.beginPath();
+                ctx.arc(coords.x, coords.y, 24, 0, Math.PI * 2);
+                ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.35)' : 'rgba(52, 211, 153, 0.3)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+
+            // Core node dot
+            ctx.beginPath();
+            ctx.arc(coords.x, coords.y, 10, 0, Math.PI * 2);
+            ctx.fillStyle = isBridge 
+                ? (isLight ? '#059669' : '#10b981')
+                : (hasPackets ? (isLight ? '#2563eb' : '#3b82f6') : (isLight ? '#94a3b8' : '#334155'));
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Label
+            ctx.fillStyle = isLight ? '#0f172a' : '#cbd5e1';
+            ctx.font = '600 11px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(coords.name, coords.x, coords.y + 24);
+
+            // Packet counter badge
+            if (hasPackets) {
+                ctx.fillStyle = isLight ? '#d97706' : '#fbbf24';
+                ctx.font = 'bold 9px JetBrains Mono';
+                ctx.fillText(`${deviceState.packetCount} pkt`, coords.x, coords.y - 14);
+            }
+        });
+    }
+
+    // Auto-init
+    window.addEventListener('DOMContentLoaded', () => {
+        initTheme();
+        refresh();
+        logEvent('System initialized. Server RSA-2048 Enclave ready.', 'success');
+        logEvent('Simulated 4 offline basement nodes + 1 cellular 4G bridge ready.', 'accent');
+        setInterval(refresh, 3500);
+    });
+</script>
+</body>
+</html>
