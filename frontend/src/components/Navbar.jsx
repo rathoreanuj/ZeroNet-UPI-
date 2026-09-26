@@ -6,39 +6,57 @@ export default function Navbar({ theme, onToggleTheme, onShowKeyModal, onSync, i
       <div className="header-inner">
         <div className="brand-cluster">
           <div className="brand-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
-              <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
-              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
-              <line x1="12" y1="20" x2="12.01" y2="20"></line>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {/* Mesh nodes */}
+              <circle cx="12" cy="4.5" r="2.5" fill="currentColor" />
+              <circle cx="4.5" cy="18" r="2.5" fill="currentColor" />
+              <circle cx="19.5" cy="18" r="2.5" fill="currentColor" />
+              {/* Central relay hub */}
+              <circle cx="12" cy="13" r="1.8" />
+              {/* Inter-node offline relay pathways */}
+              <line x1="12" y1="7" x2="12" y2="11.2" />
+              <line x1="10.5" y1="14.2" x2="6.2" y2="16.8" />
+              <line x1="13.5" y1="14.2" x2="17.8" y2="16.8" />
+              <line x1="7" y1="18" x2="17" y2="18" strokeDasharray="2 2" opacity="0.5" />
             </svg>
           </div>
           <div className="brand-title-wrap">
             <h1>
-              MeshPay
+              ZeroNet UPI
               <span className="badge-pill badge-pro">Protocol</span>
             </h1>
             <div className="brand-subtitle">
-              Offline UPI via Bluetooth Mesh &amp; Idempotent Settlement
+              Decentralized Offline Mesh Relay &amp; Idempotent Settlement
             </div>
           </div>
         </div>
 
         <div className="header-actions">
-          {/* Theme Toggle Button */}
+          {/* Theme Toggle Button with Lucide Icons */}
           <button 
             className="theme-toggle-btn" 
             onClick={onToggleTheme} 
             title="Switch Theme"
           >
-            <span className="theme-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
+            {theme === 'light' ? (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+              </svg>
+            ) : (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+              </svg>
+            )}
             <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
           </button>
-
-          <div className="system-status">
-            <div className="pulse-indicator"></div>
-            <span>Enclave: <strong>Active</strong></span>
-          </div>
 
           <button className="btn-ghost-sm" onClick={onShowKeyModal}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
