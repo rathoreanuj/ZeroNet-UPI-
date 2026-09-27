@@ -9,8 +9,12 @@ import TransactionLedger from './components/TransactionLedger';
 import ActivityTerminal from './components/ActivityTerminal';
 import KeyModal from './components/KeyModal';
 import ToastContainer from './components/ToastContainer';
+import ProblemSolutionTab from './components/ProblemSolutionTab';
+import WhyNotGiantsTab from './components/WhyNotGiantsTab';
 
 export default function App() {
+  const [activeTab, setActiveTab] = useState('simulator');
+
   // Theme State
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('meshpay_theme');
@@ -314,39 +318,91 @@ export default function App() {
           isAutoSimulating={isAutoSimulating}
         />
 
-        <KpiMetrics
-          settledVolume={settledVolume}
-          settledCount={settledList.length}
-          duplicateCount={transactions.length - settledList.length}
-          activePackets={totalActivePackets}
-          deviceCount={devices.length}
-          idempotencyCount={idempotencyCount}
-        />
+        {/* Tab Navigation */}
+        <div className="view-nav-tabs">
+          <button
+            className={`tab-btn ${activeTab === 'simulator' ? 'active' : ''}`}
+            onClick={() => setActiveTab('simulator')}
+            id="tab-simulator-btn"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+            Interactive Mesh Simulator
+          </button>
 
-        <ActionConsole
-          onSendPacket={handleSendPacket}
-          onGossip={handleGossip}
-          onFlushBridges={handleFlushBridges}
-          onResetMesh={handleResetMesh}
-          isInjecting={isInjecting}
-          isGossiping={isGossiping}
-          isFlushing={isFlushing}
-          senderVpa={senderVpa}
-          setSenderVpa={setSenderVpa}
-        />
+          <button
+            className={`tab-btn ${activeTab === 'problem-solution' ? 'active' : ''}`}
+            onClick={() => setActiveTab('problem-solution')}
+            id="tab-problem-solution-btn"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            Problem &amp; How We Solved It
+          </button>
 
-        <div className="workspace-grid">
-          <MeshTopology devices={devices} theme={theme} />
-          <AccountsTable
-            accounts={accounts}
-            onPrefillTransfer={handlePrefillTransfer}
-            idempotencyCount={idempotencyCount}
-          />
+          <button
+            className={`tab-btn ${activeTab === 'why-not-giants' ? 'active' : ''}`}
+            onClick={() => setActiveTab('why-not-giants')}
+            id="tab-why-not-giants-btn"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            Why Big Giants (GPay, PhonePe, Paytm) Haven't Done This
+          </button>
         </div>
 
-        <TransactionLedger transactions={transactions} />
+        {/* Tab 1: Interactive Mesh Simulator */}
+        {activeTab === 'simulator' && (
+          <>
+            <KpiMetrics
+              settledVolume={settledVolume}
+              settledCount={settledList.length}
+              duplicateCount={transactions.length - settledList.length}
+              activePackets={totalActivePackets}
+              deviceCount={devices.length}
+              idempotencyCount={idempotencyCount}
+            />
 
-        <ActivityTerminal logs={logs} onClearLogs={clearLogs} />
+            <ActionConsole
+              onSendPacket={handleSendPacket}
+              onGossip={handleGossip}
+              onFlushBridges={handleFlushBridges}
+              onResetMesh={handleResetMesh}
+              isInjecting={isInjecting}
+              isGossiping={isGossiping}
+              isFlushing={isFlushing}
+              senderVpa={senderVpa}
+              setSenderVpa={setSenderVpa}
+            />
+
+            <div className="workspace-grid">
+              <MeshTopology devices={devices} theme={theme} />
+              <AccountsTable
+                accounts={accounts}
+                onPrefillTransfer={handlePrefillTransfer}
+                idempotencyCount={idempotencyCount}
+              />
+            </div>
+
+            <TransactionLedger transactions={transactions} />
+
+            <ActivityTerminal logs={logs} onClearLogs={clearLogs} />
+          </>
+        )}
+
+        {/* Tab 2: What Problem & How We Solved It */}
+        {activeTab === 'problem-solution' && <ProblemSolutionTab />}
+
+        {/* Tab 3: Why Big Tech Giants Haven't Built This */}
+        {activeTab === 'why-not-giants' && <WhyNotGiantsTab />}
       </main>
 
       <KeyModal
