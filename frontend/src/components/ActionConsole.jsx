@@ -32,18 +32,18 @@ export default function ActionConsole({
     <div className="action-strip">
       <div className="action-strip-header">
         <div className="action-strip-title">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="10"></circle>
             <polygon points="10 8 16 12 10 16 10 8"></polygon>
           </svg>
-          Protocol Simulation Control Center
+          Simulation Pipeline
         </div>
         <button 
-          className="saas-btn-danger" 
-          style={{ width: 'auto', padding: '6px 14px', fontSize: '12px', borderRadius: 'var(--radius-sm)' }}
+          className="saas-btn saas-btn-danger" 
+          style={{ width: 'auto', height: '28px', padding: '0 10px', fontSize: '11px' }}
           onClick={onResetMesh}
         >
-          🗑 Reset Mesh & Cache
+          Reset Mesh & Cache
         </button>
       </div>
 
@@ -55,14 +55,14 @@ export default function ActionConsole({
               <span className="step-pill">1</span>
               <div>
                 <div className="step-name">Compose & Inject</div>
-                <div className="step-desc">Offline client encrypts with Server RSA key</div>
+                <div className="step-desc">Offline phone seals payment with RSA key</div>
               </div>
             </div>
 
-            <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div className="form-row">
                 <div className="input-group">
-                  <span className="input-label">Sender (Offline)</span>
+                  <span className="input-label">Sender</span>
                   <select 
                     className="saas-select" 
                     value={senderVpa} 
@@ -107,7 +107,7 @@ export default function ActionConsole({
                   </div>
                 </div>
                 <div className="input-group">
-                  <span className="input-label">UPI PIN</span>
+                  <span className="input-label">PIN</span>
                   <input 
                     type="password" 
                     className="saas-input" 
@@ -126,11 +126,7 @@ export default function ActionConsole({
             onClick={handleSubmitInject} 
             disabled={isInjecting}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-            {isInjecting ? 'Encrypting & Sealing...' : 'Inject into Mesh (phone-alice)'}
+            {isInjecting ? 'Sealing...' : 'Inject into Mesh'}
           </button>
         </div>
 
@@ -138,14 +134,14 @@ export default function ActionConsole({
         <div className="step-block">
           <div>
             <div className="step-title-wrap">
-              <span className="step-pill" style={{ background: 'var(--cyan)' }}>2</span>
+              <span className="step-pill">2</span>
               <div>
                 <div className="step-name">Gossip Hop</div>
-                <div className="step-desc">Relay via Bluetooth BLE hops</div>
+                <div className="step-desc">Relay packet across peer devices</div>
               </div>
             </div>
-            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '10px', lineHeight: '1.5' }}>
-              Simulates peer discovery in the basement. Every device relays held packets to neighbors; TTL decrements by 1 each hop.
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px', lineHeight: '1.5' }}>
+              Devices relay held packets to nearby phones in the basement. TTL decrements per hop.
             </p>
           </div>
           <button 
@@ -153,12 +149,7 @@ export default function ActionConsole({
             onClick={onGossip} 
             disabled={isGossiping}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="23 4 23 10 17 10"></polyline>
-              <polyline points="1 20 1 14 7 14"></polyline>
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-            </svg>
-            {isGossiping ? 'Gossiping...' : 'Run Gossip Round'}
+            {isGossiping ? 'Relaying...' : 'Run Gossip Round'}
           </button>
         </div>
 
@@ -166,26 +157,22 @@ export default function ActionConsole({
         <div className="step-block">
           <div>
             <div className="step-title-wrap">
-              <span className="step-pill" style={{ background: 'var(--success)' }}>3</span>
+              <span className="step-pill">3</span>
               <div>
                 <div className="step-name">Bridge 4G Ingest</div>
-                <div className="step-desc">Node reaches outdoor cellular connection</div>
+                <div className="step-desc">Node reaches cellular connection</div>
               </div>
             </div>
-            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '10px', lineHeight: '1.5' }}>
-              Bridge nodes POST held packets in parallel to <code>/api/bridge/ingest</code>. Exercises concurrent atomic SHA-256 deduplication.
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px', lineHeight: '1.5' }}>
+              Bridge node POSTs held packets to server. Exercises atomic SHA-256 deduplication.
             </p>
           </div>
           <button 
-            className="saas-btn saas-btn-primary" 
-            style={{ background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)' }}
+            className="saas-btn saas-btn-secondary" 
             onClick={onFlushBridges} 
             disabled={isFlushing}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-            </svg>
-            {isFlushing ? 'Uploading to 4G...' : 'Bridges Upload to 4G'}
+            {isFlushing ? 'Uploading...' : 'Bridges Upload (4G)'}
           </button>
         </div>
 
@@ -193,14 +180,14 @@ export default function ActionConsole({
         <div className="step-block">
           <div>
             <div className="step-title-wrap">
-              <span className="step-pill" style={{ background: 'var(--warning)' }}>4</span>
+              <span className="step-pill">4</span>
               <div>
-                <div className="step-name">Replay Defense</div>
-                <div className="step-desc">Test duplicate storms</div>
+                <div className="step-name">Idempotency Check</div>
+                <div className="step-desc">Verify duplicate rejection</div>
               </div>
             </div>
-            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '10px', lineHeight: '1.5' }}>
-              Re-flush bridges with existing packets to prove duplicate rejection without double-spending.
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px', lineHeight: '1.5' }}>
+              Re-attempt bridge upload to verify duplicate packets are safely dropped.
             </p>
           </div>
           <button 
@@ -208,7 +195,7 @@ export default function ActionConsole({
             onClick={onFlushBridges}
             disabled={isFlushing}
           >
-            ⚡ Re-Attempt Upload
+            Re-Attempt Upload
           </button>
         </div>
       </div>

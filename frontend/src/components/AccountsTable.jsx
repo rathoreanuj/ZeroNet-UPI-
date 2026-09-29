@@ -12,11 +12,11 @@ export default function AccountsTable({ accounts, onPrefillTransfer, idempotency
     <div className="saas-card">
       <div className="card-title-bar">
         <div className="card-heading">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
             <line x1="2" y1="10" x2="22" y2="10"></line>
           </svg>
-          Core Banking Settlement Ledger
+          Participant Balances
         </div>
         <div className="card-badge">H2 In-Memory DB</div>
       </div>
@@ -25,8 +25,8 @@ export default function AccountsTable({ accounts, onPrefillTransfer, idempotency
         <thead>
           <tr>
             <th>Participant</th>
-            <th>VPA Handle</th>
-            <th>Available Balance</th>
+            <th>VPA</th>
+            <th>Balance</th>
             <th style={{ textAlign: 'right' }}>Action</th>
           </tr>
         </thead>
@@ -38,7 +38,7 @@ export default function AccountsTable({ accounts, onPrefillTransfer, idempotency
                   <div className="user-avatar-sm">
                     {USER_INITIALS[a.vpa] || 'U'}
                   </div>
-                  <strong style={{ color: 'var(--text-primary)' }}>{a.holderName}</strong>
+                  <strong style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{a.holderName}</strong>
                 </div>
               </td>
               <td>
@@ -55,10 +55,10 @@ export default function AccountsTable({ accounts, onPrefillTransfer, idempotency
               <td style={{ textAlign: 'right' }}>
                 <button
                   className="btn-ghost-sm"
-                  style={{ display: 'inline-flex', padding: '3px 8px', fontSize: '11px' }}
+                  style={{ padding: '3px 8px', fontSize: '10px' }}
                   onClick={() => onPrefillTransfer(a.vpa)}
                 >
-                  Send from here
+                  Select
                 </button>
               </td>
             </tr>
@@ -69,7 +69,7 @@ export default function AccountsTable({ accounts, onPrefillTransfer, idempotency
       <div
         style={{
           marginTop: 'auto',
-          paddingTop: '16px',
+          paddingTop: '12px',
           borderTop: '1px solid var(--border-subtle)',
           display: 'flex',
           justifyContent: 'space-between',
@@ -77,16 +77,16 @@ export default function AccountsTable({ accounts, onPrefillTransfer, idempotency
         }}
       >
         <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-          Transactions are cryptographically signed & debited atomically.
+          Debited/credited atomically.
         </span>
         <span
           style={{
             fontSize: '11px',
-            color: 'var(--accent-primary)',
+            color: 'var(--text-secondary)',
             fontFamily: "'JetBrains Mono', monospace",
           }}
         >
-          Cache Size: {idempotencyCount} hashes
+          Cache: {idempotencyCount} hashes
         </span>
       </div>
     </div>

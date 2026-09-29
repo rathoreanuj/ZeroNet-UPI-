@@ -6,7 +6,7 @@ export default function Navbar({ theme, onToggleTheme, onShowKeyModal, onSync, i
       <div className="header-inner">
         <div className="brand-cluster">
           <div className="brand-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
               <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
               <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
@@ -15,11 +15,11 @@ export default function Navbar({ theme, onToggleTheme, onShowKeyModal, onSync, i
           </div>
           <div className="brand-title-wrap">
             <h1>
-              MeshPay Protocol 
-              <span className="badge-pill badge-pro">Zero-Net UPI &bull; React</span>
+              MeshPay
+              <span className="badge-pill badge-pro">Protocol</span>
             </h1>
             <div className="brand-subtitle">
-              Decentralized Bluetooth Mesh Payment Relaying & Idempotent Settlement
+              Offline UPI via Bluetooth Mesh &amp; Idempotent Settlement
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@ export default function Navbar({ theme, onToggleTheme, onShowKeyModal, onSync, i
           <button 
             className="theme-toggle-btn" 
             onClick={onToggleTheme} 
-            title="Switch Theme (Light / Dark)"
+            title="Switch Theme"
           >
             <span className="theme-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
             <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
@@ -37,30 +37,30 @@ export default function Navbar({ theme, onToggleTheme, onShowKeyModal, onSync, i
 
           <div className="system-status">
             <div className="pulse-indicator"></div>
-            <span>Server Enclave: <strong>Active</strong></span>
+            <span>Enclave: <strong>Active</strong></span>
           </div>
 
           <button className="btn-ghost-sm" onClick={onShowKeyModal}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
-            RSA Key Enclave
+            RSA Key
           </button>
 
           <a href="http://localhost:8080/h2-console" target="_blank" rel="noreferrer" className="btn-ghost-sm">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
               <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
               <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
             </svg>
-            H2 DB Console
+            H2 Console
           </a>
 
           <button className="btn-ghost-sm" onClick={() => onSync(true)}>
             <svg 
-              width="14" 
-              height="14" 
+              width="12" 
+              height="12" 
               viewBox="0 0 24 24" 
               fill="none" 
               stroke="currentColor" 

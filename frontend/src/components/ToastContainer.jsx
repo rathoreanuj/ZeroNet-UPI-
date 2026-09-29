@@ -2,10 +2,10 @@ import React from 'react';
 
 export default function ToastContainer({ toasts }) {
   const colorMap = {
-    success: 'var(--success)',
-    warning: 'var(--warning)',
-    danger: 'var(--danger)',
-    info: 'var(--accent-primary)',
+    success: 'var(--status-success-text)',
+    warning: 'var(--status-warning-text)',
+    danger: 'var(--status-danger-text)',
+    info: 'var(--text-primary)',
   };
 
   return (
@@ -14,8 +14,8 @@ export default function ToastContainer({ toasts }) {
         <div key={toast.id} className="saas-toast">
           <div
             style={{
-              width: '8px',
-              height: '8px',
+              width: '6px',
+              height: '6px',
               borderRadius: '50%',
               background: colorMap[toast.type] || colorMap.info,
               flexShrink: 0,
@@ -25,13 +25,14 @@ export default function ToastContainer({ toasts }) {
             <strong
               style={{
                 display: 'block',
-                fontSize: '12px',
+                fontSize: '11px',
+                fontWeight: 600,
                 color: colorMap[toast.type] || colorMap.info,
               }}
             >
               {toast.title}
             </strong>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
               {toast.message}
             </span>
           </div>

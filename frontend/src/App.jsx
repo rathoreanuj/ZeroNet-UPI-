@@ -300,8 +300,6 @@ export default function App() {
 
   return (
     <>
-      <div className="ambient-glow"></div>
-
       <Navbar
         theme={theme}
         onToggleTheme={toggleTheme}
