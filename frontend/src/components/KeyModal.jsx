@@ -32,11 +32,11 @@ export default function KeyModal({ isOpen, onClose, publicKey, onCopyKey }) {
         >
           {publicKey || 'Loading server public key...'}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '14px', gap: '8px' }}>
-          <button className="saas-btn saas-btn-secondary" style={{ width: 'auto', height: '30px' }} onClick={onCopyKey}>
+        <div className="modal-footer-actions" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '14px', gap: '8px' }}>
+          <button className="saas-btn saas-btn-secondary modal-btn" style={{ width: 'auto', height: '30px' }} onClick={onCopyKey}>
             Copy Key
           </button>
-          <button className="saas-btn saas-btn-primary" style={{ width: 'auto', height: '30px' }} onClick={onClose}>
+          <button className="saas-btn saas-btn-primary modal-btn" style={{ width: 'auto', height: '30px' }} onClick={onClose}>
             Close
           </button>
         </div>

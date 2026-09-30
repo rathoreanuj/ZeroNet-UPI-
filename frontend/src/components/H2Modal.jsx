@@ -69,7 +69,7 @@ export default function H2Modal({ isOpen, onClose }) {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          <div className="modal-form-grid">
             <div>
               <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
                 User Name:
@@ -97,8 +97,8 @@ export default function H2Modal({ isOpen, onClose }) {
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)' }}>
-          <button className="saas-btn saas-btn-secondary" style={{ width: 'auto', height: '32px' }} onClick={onClose}>
+        <div className="modal-footer-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)' }}>
+          <button className="saas-btn saas-btn-secondary modal-btn" style={{ width: 'auto', height: '32px' }} onClick={onClose}>
             Cancel
           </button>
           <a
